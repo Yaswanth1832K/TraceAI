@@ -1,175 +1,57 @@
-This document was initially generated using Kiro and then reviewed and refined by our team to match the implemented prototype.
-
-Project Name: TraceAI
-Team Members: Yaswanth Jallipalli,Kanishkhan,Prakyath Nandigam,Nikshith Gurram
-
-1. Introduction
-
-TraceAI is an AI-powered debugging assistant designed to help students and beginner developers understand and fix errors in unfamiliar codebases.
-
-Instead of searching forums or repeatedly trying random fixes, users can upload a project repository and paste an error message. The system analyzes relevant project files and explains the likely cause of the error along with suggested solutions.
-
-The goal of TraceAI is not to replace developers, but to support learning and faster onboarding into real-world software projects.
-
-2. Problem Statement
-
-Debugging is one of the most time-consuming activities in software development, especially for new developers. Many errors occur due to configuration issues, dependency problems, or misunderstanding of program flow.
-
-Existing resources such as documentation, forums, and chatbots provide generic answers because they cannot access the actual project. As a result, developers spend hours locating the real cause of a simple problem.
-
-TraceAI addresses this gap by analyzing the user’s real codebase together with runtime error logs.
-
-3. Target Users
-
-Computer science students
-
-Internship developers
-
-Open-source contributors
-
-Developers onboarding into new projects
-
-4. Functional Requirements
-4.1 Project Upload
-
-The system accepts a GitHub repository link or ZIP file.
-
-The system extracts source files from the project.
-
-The system confirms successful upload to the user.
-
-4.2 Error Input
-
-Users can paste runtime errors or crash logs.
-
-The system identifies key details such as error type and stack trace.
-
-The system notifies the user if the error text is unclear.
-
-4.3 Project Indexing
-
-The system scans project files and prepares them for search.
-
-Important code sections (imports, functions, classes) are identified.
-
-The user is notified when indexing is complete.
-
-4.4 Context Retrieval
-
-The system finds files relevant to the error.
-
-The system extracts surrounding code context.
-
-Relevant files are ranked by relevance.
-
-4.5 Root Cause Analysis
-
-The system uses an AI model to analyze the error and related code.
-
-The system explains the likely cause in simple language.
-
-The system points to relevant files and code locations.
-
-4.6 Fix Recommendation
-
-The system suggests possible fixes.
-
-Suggestions may include commands or code edits.
-
-The system explains why the fix should resolve the issue.
-
-4.7 Result Presentation
-
-The output contains:
-
-Root cause explanation
-
-Related code snippet
-
-Suggested solution
-
-Users can copy the recommended fix.
-
-5. Non-Functional Requirements
-
-The interface should be simple and beginner-friendly.
-
-The system should respond within a reasonable time for small projects.
-
-Explanations should be written in clear English.
-
-The prototype focuses on JavaScript/Node.js projects.
-
-6. Privacy and Security
-
-Uploaded code is used only for analysis.
-
-Files are stored temporarily.
-
-Data is not shared with other users.
-
-7. Limitations
-
-The prototype supports small to medium-sized projects.
-
-The system provides best-effort suggestions and may not always be correct.
-
-TraceAI assists debugging but does not replace developer judgment.
-
-8. User Workflow
-
-A typical usage of TraceAI follows these steps:
-
-The user uploads a GitHub repository or project ZIP file.
-
-The system scans and indexes the project files.
-
-The user pastes a runtime error or crash message.
-
-The system retrieves relevant code sections.
-
-TraceAI analyzes the error together with the code.
-
-The system presents:
-
-explanation of the error
-
-probable root cause
-
-suggested fix
-
-This workflow is designed to mirror a real debugging process while reducing the time required to locate the problem.
-
-9. Responsible AI Considerations
-
-TraceAI provides guidance and assistance but does not automatically modify user code.
-
-Important considerations:
-
-Suggestions may not always be correct.
-
-Developers must review recommendations before applying changes.
-
-The system is intended as a learning and productivity aid.
-
-The system does not access private user credentials or external services.
-
-10. Evaluation Plan
-
-We will evaluate the effectiveness of TraceAI using practical debugging scenarios:
-
-Missing dependency errors
-
-Incorrect import paths
-
-Configuration mistakes
-
-Permission errors
-
-Success Criteria:
-
-The system identifies the correct file involved in the error
-
-The explanation is understandable to a beginner
-
-The suggested fix helps resolve the issue
+# TraceAI – Software Requirements Specification (SRS)
+
+## 1. Introduction
+TraceAI is an AI-powered debugging assistant designed to help students and beginner developers understand and fix errors in unfamiliar codebases. By analyzing the user’s real codebase together with runtime error logs, it provides contextualized root-cause analysis and fix suggestions.
+
+## 2. Problem Statement
+Debugging is time-consuming, especially for new developers. Errors often stem from configuration issues or misunderstood program flow. Existing resources (Stack Overflow, LLMs) often lack the project-specific context needed to solve niche bugs quickly. TraceAI addresses this gap by combining LLM reasoning with a Retrieval-Augmented Generation (RAG) pipeline.
+
+## 3. Target Users
+- **Students & Interns:** Learning new frameworks and debugging unfamiliar code.
+- **Onboarding Developers:** Quickly understanding existing project structures.
+- **Open-source Contributors:** Navigating new repositories to fix reported bugs.
+
+## 4. Functional Requirements
+### 4.1 Project Ingestion
+- Support for uploading local directories or linking GitHub repositories.
+- Parsing of project files and exclusion of irrelevant files (e.g., `.git`, `node_modules`).
+
+### 4.2 Error Log Input
+- Raw text input area for runtime errors and stack traces.
+- Automated extraction of file names and line numbers from the trace.
+
+### 4.3 RAG-based Retrieval
+- Generation of vector embeddings for all source code modules.
+- Storage of embeddings in a local vector database (ChromaDB/FAISS).
+- Semantic search to retrieve the most relevant code chunks based on the user's error.
+
+### 4.4 Diagnosis & Resolution
+- Root cause explanation in readable, non-robotic language.
+- Context-aware fix suggestions (code edits or terminal commands).
+
+### 4.5 User Interface
+- Dashboard for project management.
+- Detailed view for error analysis and "Reasoning Path" visualization.
+
+## 5. Non-Functional Requirements
+- **Efficiency:** Analysis result within 15 seconds for average-sized repositories.
+- **Security:** Code processed via secure API calls; no persistent storage of user code after analysis.
+- **Extensibility:** Support for JavaScript, Python, and Java in the future.
+
+## 6. User Workflow
+1. User uploads the repository and the system indexes the files.
+2. User provides a runtime error log or stack trace.
+3. TraceAI retrieves the top-K relevant code snippets from the vector store.
+4. AI analyzes the context and generates a diagnosis.
+5. User reviews and applies the recommended fix.
+
+## 7. Limitations & Mitigation
+- **Scope:** Optimized for local logic and configuration; does not trace complex distributed system failures in this prototype.
+- **Accuracy:** AI suggestions are probabilistic; users must review them before applying.
+
+## 8. Responsible AI & Evaluation
+- **Safety:** No automatic code execution.
+- **Evaluation:** Success is defined by the correct identification of "missing dependency" or "misconfigured import" errors in the provided demo apps.
+
+---
+*Note: This SRS was generated using an AI-assisted workflow and manually refined for TraceAI.*
