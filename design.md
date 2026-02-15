@@ -1,7 +1,5 @@
 # TraceAI – System Design Document
 
-**Project Name:** TraceAI
-
 ## 1. System Overview
 TraceAI utilizes a **Retrieval-Augmented Generation (RAG)** architecture to provide project-specific debugging assistance. Unlike generic LLMs, TraceAI "sees" your local code before it tries to solve your bug.
 
