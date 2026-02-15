@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # TraceAI
 
 **TraceAI** is an AI-powered debugging assistant that analyzes your project repository and runtime error logs to identify root causes and recommend actionable fixes. 
