@@ -1,5 +1,8 @@
 # TraceAI – Software Requirements Specification (SRS)
 
+**Project Name:** TraceAI  
+**Team Members:** Yaswanth Jallipalli, Kanishkhan, Prakyath Nandigam, Nikshith Gurram
+
 ## 1. Introduction
 TraceAI is an AI-powered debugging assistant designed to help students and beginner developers understand and fix errors in unfamiliar codebases. By analyzing the user’s real codebase together with runtime error logs, it provides contextualized root-cause analysis and fix suggestions.
 
