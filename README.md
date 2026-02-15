@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # TraceAI
 
 **TraceAI** is an AI-powered debugging assistant that analyzes your project repository and runtime error logs to identify root causes and recommend actionable fixes. 
@@ -43,3 +44,6 @@ Check out the [docs/demo-steps.md](docs/demo-steps.md) for a step-by-step guide 
 
 ## 📄 License
 Distributed under the MIT License. See `LICENSE` for more information.
+=======
+# TraceAI
+>>>>>>> 609bdadd2fc9885161364170bc7a5fdcf02d1041
