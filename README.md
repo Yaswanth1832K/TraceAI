@@ -1,46 +1,190 @@
-# TraceAI
+# TraceAI 🔍 – AI Mentor for Debugging Real-World Code
 
-**TraceAI** is an AI-powered debugging assistant that analyzes your project repository and runtime error logs to identify root causes and recommend actionable fixes. 
+[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.128+-green.svg)](https://fastapi.tiangolo.com)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.45+-red.svg)](https://streamlit.io)
+[![AWS Bedrock](https://img.shields.io/badge/AWS-Bedrock-orange.svg)](https://aws.amazon.com/bedrock/)
 
-*Created for an AI Hackathon.*
-
----
-
-## 🚀 The Problem
-Debugging unfamiliar codebases is slow and frustrating. When an error occurs, developers often spend hours digging through layers of code to find where things went wrong. Traditional LLMs can help with generic errors, but they lack the **context** of your specific project structure and dependencies.
-
-## 💡 The Solution
-TraceAI bridges the gap between your manual debugging and AI reasoning. By indexing your local repository, it understands the relationships between your files. When you paste an error message, TraceAI retrieves only the most relevant code snippets and uses an LLM to explain precisely what broken and how to fix it.
-
-## 🛠 Features
-- **Project Indexing:** Scans your codebase to understand imports, functions, and file structures.
-- **Smart Retrieval:** Uses a RAG pipeline to find code relevant to your specific error log.
-- **Root Cause Analysis:** Explains the "why" behind the error in plain English.
-- **Fix Suggestions:** Provides clear code snippets or commands to resolve the issue.
-
-## 🏗 How It Works (RAG Pipeline)
-TraceAI utilizes a **Retrieval-Augmented Generation (RAG)** architecture:
-1. **Upload:** You provide your project repository.
-2. **Embed:** Code snippets are converted into vector embeddings.
-3. **Query:** You paste an error message.
-4. **Retrieve:** The system performs a semantic search to find the code most likely related to that error.
-5. **Analyze:** The LLM receives the error log + relevant code context to generate a highly accurate diagnosis.
-
-## 💻 Tech Stack
-- **Frontend:** React (Web Interface)
-- **Backend:** Python (FastAPI/Flask)
-- **Vector Database:** ChromaDB / FAISS
-- **LLM:** OpenAI GPT-4 / Anthropic Claude
-- **Embeddings:** OpenAI Embeddings / Sentence Transformers
-
-## 📝 Note
-This project was built as a hackathon prototype. The requirements and technical design were generated using an AI-assisted workflow and refined manually by the team to ensure feasibility and realism.
+TraceAI is an AI-powered debugging assistant that analyzes your codebase and explains bugs like a senior software engineer. Upload your project, paste a stack trace, and get an instant root-cause explanation with a corrected code snippet.
 
 ---
 
-## 🏃 Getting Started
-Check out the [docs/demo-steps.md](docs/demo-steps.md) for a step-by-step guide on running the demo.
+## 🚀 How It Works
+
+```
+Your ZIP project
+      ↓
+Extract .py / .js files
+      ↓
+Split into code chunks (300 lines each)
+      ↓
+Amazon Bedrock Titan Embeddings → FAISS vector index
+      ↓
+Paste error trace → find top 5 relevant chunks
+      ↓
+Amazon Nova Lite (via Bedrock) → root-cause analysis + fix
+```
+
+---
+
+## 📁 Project Structure
+
+```
+traceai/
+├── backend/
+│   ├── main.py          # FastAPI entry point
+│   ├── routes.py        # API endpoints (/upload, /analyze)
+│   ├── embedder.py      # Bedrock Titan Embeddings + FAISS index
+│   ├── retriever.py     # Semantic similarity search
+│   ├── analyzer.py      # Amazon Nova Lite analysis
+│   └── utils.py         # ZIP extraction + text chunking
+├── frontend/
+│   └── app.py           # Streamlit UI
+├── example_project/     # Simple buggy Python project for testing
+├── bigger_example/      # Multi-file e-commerce project for testing
+├── requirements.txt
+└── README.md
+```
+
+---
+
+## ⚙️ Setup & Installation
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/Yaswanth1832K/TraceAI.git
+cd TraceAI
+```
+
+### 2. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Configure AWS Credentials
+Create a `.env` file in the root directory:
+```env
+AWS_ACCESS_KEY_ID=your_access_key_here
+AWS_SECRET_ACCESS_KEY=your_secret_key_here
+AWS_REGION=us-east-1
+```
+
+> ⚠️ **Never commit your `.env` file to Git.** It is included in `.gitignore`.
+
+### 4. Enable Bedrock Model Access
+Go to [AWS Bedrock Console](https://console.aws.amazon.com/bedrock/) → **Model access** and enable:
+- ✅ **Titan Embeddings V1** (amazon.titan-embed-text-v1)
+- ✅ **Nova Lite** (amazon.nova-lite-v1:0)
+
+Make sure your IAM user has the `AmazonBedrockFullAccess` policy attached.
+
+---
+
+## ▶️ Running the Application
+
+Open **two separate terminals** in the project root:
+
+**Terminal 1 — Backend:**
+```bash
+uvicorn backend.main:app --host 0.0.0.0 --port 8001 --reload
+```
+
+**Terminal 2 — Frontend:**
+```bash
+streamlit run frontend/app.py
+```
+
+Then open **[http://localhost:8501](http://localhost:8501)** in your browser.
+
+---
+
+## 🧪 Testing with Examples
+
+### Simple Example
+1. Zip the `example_project/` folder
+2. Upload the ZIP in Streamlit → click **Index Repository**
+3. Paste this error:
+```
+Traceback (most recent call last):
+  File "math_utils.py", line 18, in <module>
+    process_data([])
+  File "math_utils.py", line 4, in calculate_average
+    average = total / len(numbers)
+ZeroDivisionError: division by zero
+```
+
+### Multi-File Example
+1. Zip the `bigger_example/` folder (4-file e-commerce order system)
+2. Upload and test with:
+```
+apply_discount(order, 10) returns a negative total price.
+A 10% discount is resulting in the price going below zero.
+File: order_service.py, function: apply_discount
+```
+
+---
+
+## 📡 API Reference
+
+| Endpoint | Method | Description |
+|---|---|---|
+| `/upload` | POST | Upload a ZIP file to index the project |
+| `/analyze` | POST | Analyze an error trace against the indexed project |
+
+### `/upload`
+```bash
+curl -X POST http://localhost:8001/upload \
+  -F "file=@your_project.zip"
+```
+
+### `/analyze`
+```bash
+curl -X POST http://localhost:8001/analyze \
+  -H "Content-Type: application/json" \
+  -d '{"error_trace": "ZeroDivisionError: division by zero"}'
+```
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Backend | FastAPI + Uvicorn |
+| Frontend | Streamlit |
+| Embeddings | Amazon Bedrock (Titan Embed Text V1) |
+| LLM | Amazon Bedrock (Nova Lite) |
+| Vector DB | FAISS (local) |
+| Cloud | AWS (EC2 for deployment) |
+
+---
+
+## 📋 Requirements
+
+See [requirements.txt](./requirements.txt):
+```
+fastapi
+uvicorn
+streamlit
+boto3
+faiss-cpu
+numpy
+python-multipart
+pydantic
+requests
+python-dotenv
+```
+
+---
+
+## 🔮 Future Enhancements
+- Support for more languages (Java, TypeScript, Go)
+- GitHub URL input instead of ZIP upload
+- History of past analyses
+- EC2 deployment with a public domain
+- Multi-file cross-reference debugging
+
+---
 
 ## 📄 License
-Distributed under the MIT License. See `LICENSE` for more information.
-
+MIT License — built as a hackathon prototype.

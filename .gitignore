@@ -1,34 +1,38 @@
+# Environment / Secrets
+.env
+*.env
+
 # Python
 __pycache__/
 *.py[cod]
-*$py.class
-venv/
-.env
-
-# Node.js
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# Vector Database
-faiss_index/
-chroma_db/
-*.db
-*.sqlite
-
-# Logs
-logs/
-*.log
-
-# Build folders
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
 dist/
 build/
-out/
+.eggs/
 
-# IDEs
+# Virtual environments
+venv/
+.venv/
+env/
+
+# FAISS index files (generated at runtime)
+faiss_index.index
+faiss_index.metadata
+
+# Uploaded project files (generated at runtime)
+uploads/
+
+# IDE
 .vscode/
 .idea/
-*.swp
-*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# ZIP test files
+*.zip

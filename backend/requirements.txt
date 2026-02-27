@@ -1,6 +1,13 @@
-flask
-flask-cors
-openai
+fastapi
+uvicorn
+pydantic
+python-dotenv
 chromadb
 sentence-transformers
-python-dotenv
+openai
+langchain
+langchain-community
+langchain-openai
+langchain-chroma
+langchain-text-splitters
+python-multipart
