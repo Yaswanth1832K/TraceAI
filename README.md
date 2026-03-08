@@ -13,6 +13,8 @@
 
 [🚀 Quick Start](#️-setup--installation) · [🧠 How It Works](#-how-it-works) · [📡 API Reference](#-api-reference) · [🗺️ Roadmap](#-roadmap)
 
+
+Prototype Link: https://trace-ai-de.streamlit.app/
 </div>
 
 ---
