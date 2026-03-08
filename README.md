@@ -334,12 +334,6 @@ pip install chromadb langchain-chroma langchain-community langchain-text-splitte
 
 ---
 
-## 👥 Team
-
-Built with ❤️ for the hackathon.
-
----
-
 ## 📄 License
 
 MIT License — built as a hackathon prototype. See [LICENSE](LICENSE) for details.
