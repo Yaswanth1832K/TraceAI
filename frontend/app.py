@@ -9,8 +9,9 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+import os
 # Backend URL (FastAPI)
-BACKEND_URL = "http://localhost:8001"
+BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8002")
 
 # Custom CSS for Premium AI/Futuristic Look
 st.markdown("""
