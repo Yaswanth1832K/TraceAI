@@ -35,4 +35,8 @@ uploads/
 Thumbs.db
 
 # ZIP test files
+# ZIP test files
 *.zip
+
+# Node
+node_modules/
