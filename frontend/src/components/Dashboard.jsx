@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
 const Dashboard = () => {
     const [errorLog, setErrorLog] = useState('');
     const [analyzing, setAnalyzing] = useState(false);
@@ -10,7 +12,7 @@ const Dashboard = () => {
         if (!repoPath) return alert('Enter a project path');
         setAnalyzing(true);
         try {
-            const resp = await fetch('http://localhost:8000/index', {
+            const resp = await fetch(`${API_URL}/index`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ path: repoPath })
@@ -30,7 +32,7 @@ const Dashboard = () => {
         setResult(null); // Clear previous results
         console.log("Starting analysis for:", errorLog);
         try {
-            const resp = await fetch('http://localhost:8000/analyze', {
+            const resp = await fetch(`${API_URL}/analyze`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ error_log: errorLog })
